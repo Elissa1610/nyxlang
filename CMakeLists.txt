@@ -8,6 +8,7 @@ add_executable(insanelang
     src/main.cpp
     src/lexer.cpp
     src/parser.cpp
+        src/codegen.cpp
 )
 
 target_include_directories(insanelang PUBLIC ${PROJECT_SOURCE_DIR}/src)
