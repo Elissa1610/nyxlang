@@ -2,8 +2,11 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <memory>
+
 #include "lexer.h"
 #include "parser.h"
+#include "codegen.h"
 
 using namespace InsaneLang;
 
@@ -41,8 +44,14 @@ int main(int argc, char* argv[]) {
 
     Parser parser(tokens);
     try {
-        auto module = parser.parse();
+        auto ast = parser.parse();
         std::cout << "Parsing completed." << std::endl;
+                auto moduleDecl = std::unique_ptr<InsaneLang::ModuleDecl>(dynamic_cast<InsaneLang::ModuleDecl*>(ast.release()));
+        if (moduleDecl) {
+            InsaneLang::CodeGenerator codegen;
+            std::string ir = codegen.generate(std::move(moduleDecl));
+            std::cout << ir << std::endl;
+        }
     } catch (const std::exception& ex) {
         std::cerr << "Parser error: " << ex.what() << std::endl;
     }
